@@ -5,9 +5,17 @@ reach the bottom of screen. For each level, more stars are added. if you click o
 
 project on the animate() function in pygame zero
 update() function
+
+Hacks and Tweaks
+change the star icon to something else
+
+make the stars move at different speeds
+
+make the stars shuffle every couple of seconds --> create a function
+
+try again
 """
 import random, pgzrun
-
 
 #DECLARE CONSTANTS -> constants are vars declared at the start of the program. Their vals shouldn't change throughout the program
 FONT_COLOR = (255,255,255)
@@ -82,12 +90,22 @@ def layout_stars(star_list):
 
 def animate_stars(star_list):
     for star in star_list:
-        duration = START_SPEED - current_level #the higher the level, the shorter the duration of the level
+        duration = random.randint(current_level+1,START_SPEED)-current_level
+        #duration = (START_SPEED-random.randint(1,9)) - current_level #the higher the level, the shorter the duration of the level
+        print('the duration for {} is {}'.format(star.image,duration))
         star.anchor = ("center", "bottom") #sets the anchor of the star at the bottom of the star image
-        animation = animate(star, duration=duration, on_finished=handle_game_over,y=HEIGHT)
+        animation = animate(star, duration=duration, on_finished=handle_game_over,x=random.randint(10,WIDTH-10),y=HEIGHT)
         #print(type(animation))
         #animate(on_finished = call a function when animation finishes, y=move actor down a number of pixels
         animations.append(animation) #hold the animations in a list of animation objects
+
+
+def shuffle():
+    global stars
+    if stars:
+        x_values = [star.x for star in stars] #loops through the x values of each star in puts in x_values list
+        random.shuffle(x_values)
+        for indexb;''
 def on_mouse_down(pos):
     global stars, current_level
     for star in stars:
