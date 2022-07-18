@@ -9,6 +9,8 @@ update() function
 Hacks and Tweaks
 change the star icon to something else
 
+make the stars appear at opposite directions of the screen
+
 make the stars move at different speeds
 
 make the stars shuffle every couple of seconds --> create a function
@@ -52,7 +54,6 @@ def update():
     if len(stars) == 0: #if there are no stars in the list, that means we are at the beginnning of the game or at the end of the level when a red star is clicked
         stars = create_level(current_level) #re-populate the list of stars
 
-
 #in order to make new stars, you must create a list of colors,  a least of actor "star" objects, layout the stars in order on the top of the screen, and animate the new stars list
 def create_level(stars_num): #depending on the level, a number of stars are added.
     colors_to_create = get_colors_to_create(stars_num) # a list of colors ["red","blue",etc]
@@ -60,7 +61,6 @@ def create_level(stars_num): #depending on the level, a number of stars are adde
     layout_stars(new_stars)
     animate_stars(new_stars)
     return new_stars
-
 
 def get_colors_to_create(num):
     colors_to_create = ["red"] #first item in the list will always be red
@@ -80,17 +80,19 @@ def layout_stars(star_list):
     gap_num = len(star_list) + 1 #calculate the number of gaps on the screen
     gap_size = WIDTH / gap_num
     random.shuffle(star_list)
-    # for index, star in enumerate(star_list): #enumerate will return a list of tuples like so .. [(0,star1),(1,star2),(2,star3)...]
-    #     x_pos = (index+1) * gap_size # xctrl+/ to block comment
-    #     star.x = x_pos #change the x position of the new star
+    for index, star in enumerate(star_list): #enumerate will return a list of tuples like so .. [(0,star1),(1,star2),(2,star3)...]
+        x_pos = (index+1) * gap_size # xctrl+/ to block comment
+        star.x = x_pos #change the x position of the new star
+        if index % 2 == 0: #every two indices
+            star.y=HEIGHT #make the star come from the bottom of the screen
     #or
-    for index in range(len(star_list)):
-        x_pos = (index+1) * gap_size
-        star_list[index].x = x_pos
+    # for index in range(len(star_list)):
+    #     x_pos = (index+1) * gap_size
+    #     star_list[index].x = x_pos
 
 def animate_stars(star_list):
     for star in star_list:
-        duration = random.randint(current_level+1,START_SPEED)-current_level
+        duration = random.randint(current_level+1,START_SPEED)#-current_level
         #duration = (START_SPEED-random.randint(1,9)) - current_level #the higher the level, the shorter the duration of the level
         print('the duration for {} is {}'.format(star.image,duration))
         star.anchor = ("center", "bottom") #sets the anchor of the star at the bottom of the star image
@@ -105,7 +107,13 @@ def shuffle():
     if stars:
         x_values = [star.x for star in stars] #loops through the x values of each star in puts in x_values list
         random.shuffle(x_values)
-        for indexb;''
+        for index, star in enumerate(stars):
+            new_x = x_values[index]
+            animation = animate(star, duration=0.5, x=new_x)
+            animations.append(animation)
+
+clock.schedule_interval(shuffle,1)
+
 def on_mouse_down(pos):
     global stars, current_level
     for star in stars:
